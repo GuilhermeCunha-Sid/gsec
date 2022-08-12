@@ -38,7 +38,7 @@ case $opt in
 		do
 			for d in $(cat $wlist)
 			do
-				req=$(curl -s --head $http://$i/$d | cut -d " " -f2 | head -n1)
+				req=$(curl -s --head $i/$d | cut -d " " -f2 | head -n1)
 				case $req in
 					"200")
 						echo "$http://$i/$d" >> $outfile

@@ -32,7 +32,6 @@ case $opt in
 	2)
 		echo "[*] Directory Scanner [*]"
 		read -p "[?] Wordlist: " wlist
-		read -p "[?] http or https: " http
 		read -p "[?] URL List: " urllist
 		for i in $(cat $urllist)
 		do

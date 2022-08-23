@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo    "[-] Hacker Tool              [*]"
+echo    "[-] Hacker  Tool             [*]"
 echo    "[:]--------------------------[:]"
 echo    "[1] Sub-Domain Scanner       [*]"
 echo    "[2] Domain Directory Scanner [*]"

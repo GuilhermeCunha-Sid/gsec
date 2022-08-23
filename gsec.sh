@@ -6,9 +6,9 @@ echo    "[1] Sub-Domain Scanner       [*]"
 echo    "[2] Domain Directory Scanner [*]"
 echo    "[3] Web Scraper              [*]"
 echo    "[4] Information Gathering    [*]"
+echo    "[5] Trace Router             [*]"
 echo    "[:]--------------------------[:]"
 read -p "[?] O que deseja fazer: " opt
-read -p "[?] Output File: " outfile
 
 case $opt in
 	1)
@@ -16,6 +16,8 @@ case $opt in
 		read -p "[?] Wordlist: " wlist
 		read -p "[?] http or https: " http
 		read -p "[?] Domain.com: " domain
+		read -p "[?] Output File: " outfile
+
 		for i in $(cat $wlist)
 		do
 			req=$(curl -s --head $http://$i.$domain | cut -d " " -f2 | head -n1)
@@ -34,6 +36,8 @@ case $opt in
 		echo "[*] Directory Scanner [*]"
 		read -p "[?] Wordlist: " wlist
 		read -p "[?] URL List: " urllist
+		read -p "[?] Output File: " outfile
+
 		for i in $(cat $urllist)
 		do
 			for d in $(cat $wlist)
@@ -54,6 +58,8 @@ case $opt in
 	3)
 		echo "[*] Web Scraper [*]"
 		read -p "[?] URL List: " urllist
+		read -p "[?] Output File: " outfile
+
 		for i in $(cat $urllist)
 		do
 			echo ""
@@ -80,6 +86,7 @@ case $opt in
 		;;
 	4)
 		read -p "Iniciar Information Gathering [s/N]?" opc
+		read -p "[?] Output File: " outfile
 
 		if [[ $opc = "s" || $opc = "S" ]]
 		then
@@ -168,7 +175,32 @@ case $opt in
 		    cat $outfile.log
 		fi
 		;;
+	5)
+		echo "[*] Trace Router             [*]"
+		read -p "[?] Digite o <domain.com>: " domain
+
+		c=1
+        	while [[ c ]]
+        	do
+                	req=$(hping3 -1 -t $c -c 1 $domain 2> /dev/null | tail -n1)
+                	if [[ "$(echo $req | cut -d " " -f1,2)" == "TTL 0" ]]
+                	then
+                        	echo -n "$c - "
+                        	echo $req | cut -d " " -f6
+                	elif [[ "$(echo $req | cut -d" " -f1)" == "HPING" ]]
+                	then
+                        	echo "$c - * * *"
+                	else
+                        	echo -n "$c * "
+                        	echo $req | cut -d " " -f2,3,6
+                        	break
+                	fi
+
+                	(( c = c +1 ))
+        	done
+		;;
 	*)
+		echo "Opção Invalida. Finalizando o Programa!"
 		;;
 esac
 
